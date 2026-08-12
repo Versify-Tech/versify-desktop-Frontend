@@ -1,85 +1,138 @@
-# ⚡ Versify Desktop — Frontend UI & User Experience Engine
+# ⚡ Versify Desktop Frontend (`React + Vite + Tauri UI`)
 
-[![Drips Wave](https://img.shields.io/badge/Drips%20Wave-Support%20Frontend-6C5CE7?style=for-the-badge&logo=ripple&logoColor=white)](https://drips.network/app/projects/github/Versify-Tech/versify-desktop-Frontend)
-[![React](https://img.shields.io/badge/React-18.x-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?style=for-the-badge&logo=vite)](https://vitejs.dev/)
+[![React](https://img.shields.io/badge/React-18.x-61DAFB.svg?style=flat-square&logo=react)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-5.x-646CFF.svg?style=flat-square&logo=vite)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38B2AC.svg?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+[![Stellar](https://img.shields.io/badge/Stellar-Network-14B6EF.svg?style=flat-square&logo=stellar)](https://stellar.org/)
+[![Drips Wave](https://img.shields.io/badge/Drips%20Wave-Eligible-00E599.svg?style=flat-square)](https://drips.network/wave/stellar)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
-Welcome to the **Versify Desktop Frontend** repository! This project powers the entire visual user experience, interface layout, and client-side logic for **Versify Studio**—a high-speed, modern desktop application crafted specifically for live church services, broadcast media teams, and scripture presentation environments.
-
-The frontend is designed with speed, readability, and immediate accessibility in mind. During live worship services and sermons, media operators need high-speed execution without searching through cluttered menus. Versify addresses this by providing an intuitive Office-style ribbon layout, instant live previews, high-contrast confidence monitors, and intelligent speech recognition listeners.
-
----
-
-## 🏛️ Comprehensive Architecture & Frontend Responsibilities
-
-The frontend architecture operates as a fully decoupled single-page application (SPA) optimized for zero-latency interactions. It renders the primary presentation controller, live stage monitors, and projector output layers, communicating seamlessly with the native Rust backend over Tauri's asynchronous Inter-Process Communication (IPC) bridge.
-
-### Key Architectural Layers:
-1. **Ribbon Interface & Command Center:** 
-   * Contextual ribbon navigation containing tabs for Home, Scripture Projection, Media Playback, Stage Outputs, and System Configuration.
-   * Visual slide queue management allowing quick staging, live firing, and clearing of projection outputs.
-
-2. **Real-time Speech-to-Text & Verse Parser (`verseParser.ts`):**
-   * Client-side stream listener that parses live sermon audio transcriptions in real time.
-   * Utilizes regex and contextual matching engines to recognize spoke scripture cues (e.g., *"Turn with me to John chapter 3 verse 16"*) and auto-stage matching scripture slides for the media team.
-
-3. **Multi-Stage Display Layout Engine:**
-   * Dynamic stage management handling layouts for the main auditorium screens, confidence monitors for stage speakers, and broadcast lower-thirds.
-   * High-contrast design guidelines engineered specifically to prevent eye fatigue in low-light control booths.
-
-4. **Authentication & Licensing Client (`SplashScreen.tsx` / `AuthCheck.tsx`):**
-   * Secure user onboarding, startup splash routines, license validation state management, and account session persistence.
+The React-based user interface for **Versify** — a modern, open-source church presentation platform built with React, Vite, and Tauri, featuring **Stellar Network Blockchain Software Licensing**.
 
 ---
 
-## 📊 Detailed Development Roadmap & Feature Matrix
-
-### ✅ Completed & Fully Operational Features
-* [x] **Modular Ribbon Navigation Bar:** Tabbed header interface with custom action buttons for seamless service control.
-* [x] **Live Confidence Monitor System:** Dedicated stage monitor UI displaying active slides, current time, speaker timers, and upcoming scripture cues.
-* [x] **Real-Time Scripture Parser Engine:** Instant speech pattern analysis converting live voice transcripts into clickable Bible passage cues.
-* [x] **Dynamic Verse Quick-Search:** Sub-second client-side filtering for books, chapters, and verses across multiple translations.
-* [x] **Authentication & Licensing Screens:** Visual onboarding flow, key verification handlers, and splash screen routines.
-
-### 🚧 Currently In Development
-* [ ] **Dynamic Visual Themes & High-Contrast Modes:** Full theme customization (Dark, Light, High-Contrast Control Booth Mode) tailored for auditorium lighting setups.
-* [ ] **Lower-Third Broadcast Overlay Generator:** HTML5 Canvas / WebGL dynamic lower-third graphic engine with animated text transitions for broadcast software (OBS, vMix).
-* [ ] **Custom Slide Layout Canvas:** Drag-and-drop slide designer allowing operators to position text, custom graphics, and lower-third backgrounds.
-
-### 🚀 Long-Term Futuristic Roadmap
-* [ ] **AI Sermon Outline Presenter:** Auto-generates structured bullet points and presentation slides in real time as the preacher speaks.
-* [ ] **GPU-Accelerated Slide Transition Engine:** Custom CSS/WebGL shaders for smooth kinetic typography transitions, crossfades, and motion graphic backgrounds.
-* [ ] **Mobile & Tablet Control Remote (PWA):** Progressive Web App wrapper enabling pastors and media directors to trigger slides remotely from an iPad, tablet, or smartphone.
-* [ ] **Multi-Language UI Localization:** Full i18n support for global multi-lingual congregations and international ministry teams.
+## 📑 Table of Contents
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Frontend Architecture](#-frontend-architecture)
+- [Stellar Wallet & Licensing Integration](#-stellar-wallet--licensing-integration)
+- [Project Directory Structure](#-project-directory-structure)
+- [Local Development Setup](#-local-development-setup)
+- [Packaging & Production Releases](#-packaging--production-releases)
+- [Stellar Wave Program (Drips)](#-stellar-wave-program-drips)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 ---
 
-## 💧 Why Support the Frontend on Drips Wave?
+## 🚀 Overview
 
-Continuous presentation software shouldn't be sluggish, bloated, or overly expensive. By supporting `versify-desktop-Frontend` on **Drips Wave**, you are directly funding open-source UX development, accessible control panel design, and intelligent AI-driven worship presentation tools.
-
-Your continuous micro-funding helps us dedicate developer hours to optimizing screen render performance, adding customizable lower-third themes, and expanding global language translations.
-
-👉 **[Stream Support to `versify-desktop-Frontend` on Drips Wave](https://drips.network/app/projects/github/Versify-Tech/versify-desktop-Frontend)**
+Versify replaces proprietary presentation software with an open-source solution. The React frontend provides a responsive interface for church media operators to control live projection, customize scripture displays, and verify license ownership using Stellar public keys (`G...`).
 
 ---
 
-## 🛠️ Local Development & Setup Instructions
+## ✨ Key Features
 
-### Prerequisites
-* **Node.js:** `v18.x` or higher
-* **Package Manager:** `npm` or `pnpm`
+* **Stellar Public Key License Activation:** Integrated modal that sends user public keys to the Rust backend to verify active `VERSIFY` token balances on-chain.
+* **Instant Scripture Projection:** Interactive Bible verse search interface with live screen previews.
+* **Real-time Status Indicator:** Displays online/offline status, current user session details, and Stellar token balance.
+* **Responsive Dark Mode UI:** Designed for dark sanctuary tech booths.
 
-### Installation Commands
+---
 
-```bash
-# 1. Clone the frontend repository
-git clone [https://github.com/Versify-Tech/versify-desktop-Frontend.git](https://github.com/Versify-Tech/versify-desktop-Frontend.git)
-cd versify-desktop-Frontend
+## 🏗️ Frontend Architecture
 
-# 2. Install all UI dependencies
-npm install
+The frontend communicates with the Tauri Rust core over IPC using `@tauri-apps/api`.
 
-# 3. Launch the Vite local development server
-npm run dev
+┌────────────────────────────────────────────────────────────────────────┐
+│                        React Application (src/)                        │
+│                                                                        │
+│  ┌─────────────────────┐    ┌─────────────────────┐    ┌────────────┐  │
+│  │ StellarLicense.jsx  │    │ BiblePresenter.jsx  │    │ Navbar.jsx │  │
+│  └──────────┬──────────┘    └──────────┬──────────┘    └─────┬──────┘  │
+└─────────────┼──────────────────────────┼─────────────────────┼─────────┘
+│                          │                     │
+└──────────────────────────┼─────────────────────┘
+|
+v @tauri-apps/api/core
+invoke('verify_license', { ... })
+invoke('get_bible_verse', { ... })
+|
+v
+Native Rust Backend Core (src-tauri)
+
+
+---
+
+## 🌌 Stellar Wallet & Licensing Integration
+
+Users activate Versify Pro by submitting their Stellar Public Key (`G...`):
+
+```jsx
+import React, { useState } from 'react';
+import { invoke } from '@tauri-apps/api/core';
+
+export function StellarLicense() {
+  const [publicKey, setPublicKey] = useState('');
+  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleVerify = async () => {
+    if (!publicKey.trim()) return;
+    setLoading(true);
+    try {
+      const res = await invoke('verify_license', { stellarPublicKey: publicKey.trim() });
+      setSession(res);
+    } catch (err) {
+      console.error('Failed to verify license:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="p-6 bg-slate-900 text-white rounded-lg shadow-xl max-w-md">
+      <h2 className="text-xl font-bold mb-2">🌟 Stellar License Verification</h2>
+      <input
+        type="text"
+        placeholder="Enter Stellar Key (G...)"
+        value={publicKey}
+        onChange={(e) => setPublicKey(e.target.value)}
+        className="w-full p-2 mb-4 rounded bg-slate-800 border border-slate-700 text-white"
+      />
+      <button
+        onClick={handleVerify}
+        disabled={loading}
+        className="w-full bg-blue-600 hover:bg-blue-500 font-bold py-2 rounded transition"
+      >
+        {loading ? 'Querying Stellar Network...' : 'Verify License'}
+      </button>
+
+      {session && (
+        <div className="mt-4 p-3 bg-slate-800 rounded border border-slate-700 text-sm">
+          <p><strong>Status:</strong> {session.is_active ? 'Active ✅' : 'Inactive ❌'}</p>
+          <p><strong>Tier:</strong> {session.license_tier}</p>
+          <p><strong>Message:</strong> {session.message}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+📁 Project Directory Structure
+Plaintext
+versify-desktop/
+├── src/
+│   ├── assets/             # Logos, icons, and static graphics
+│   ├── components/         # Modular React UI components
+│   │   ├── StellarLicense.jsx # Stellar Key Verification modal
+│   │   ├── ProjectionView.jsx # Live presentation output
+│   │   └── VerseSearch.jsx    # Scripture search bar & controller
+│   ├── App.jsx             # Main application layout & routes
+│   ├── main.jsx            # React root DOM renderer
+│   └── index.css           # Global Tailwind CSS styles
+├── public/                 # Favicons and web app manifest
+├── index.html              # HTML entrypoint
+├── package.json            # NPM dependencies and scripts
+├── vite.config.js          # Vite configuration
+├── tailwind.config.js      # Tailwind CSS theme configuration
+└── README.md
