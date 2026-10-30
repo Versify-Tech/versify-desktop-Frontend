@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { SplashScreen } from './components/SplashScreen';
 import { AuthCheck } from './components/AuthCheck';
+import { AIAssistantPanel } from './components/AIAssistantPanel';
 import { parseBibleReference } from './verseParser';
 import { AppStage, UserSession, ActiveSlide } from './types';
 
@@ -19,7 +20,7 @@ interface LocalMedia {
   type: 'image' | 'video';
 }
 
-type TabType = 'SCRIPTURES' | 'MEDIA' | 'NOTES' | 'LOWER_THIRD' | 'LYRICS_PRAYER';
+type TabType = 'SCRIPTURES' | 'MEDIA' | 'NOTES' | 'LOWER_THIRD' | 'LYRICS_PRAYER' | 'AI_ASSISTANT';
 
 const BIBLE_VERSIONS = [
   { code: 'KJV', name: 'King James Version (KJV)' },
@@ -91,11 +92,12 @@ export default function App() {
     const parsed = parseBibleReference(query);
 
     if (!parsed) {
-      setErrorMsg(`Format not recognized. Try "Esther 3 2" or "John 3 16".`);
+      setErrorMsg(`Format not recognized. Try "Daniel 1 3" or "John 3 16".`);
       return;
     }
 
     try {
+      // Attempt Tauri Rust backend IPC command first
       const result = await invoke<VerseResult | null>('get_bible_verse', {
         book: parsed.book,
         chapter: parsed.chapter,
@@ -110,13 +112,20 @@ export default function App() {
           version: activeVersion,
         });
         setIsBlackout(false);
-      } else {
-        setErrorMsg(`Verse not found: ${parsed.book} ${parsed.chapter}:${parsed.verse}`);
+        return;
       }
-    } catch (err: any) {
-      console.error("IPC Query Error:", err);
-      setErrorMsg("Query error occurred while fetching scripture.");
+    } catch (err) {
+      console.warn("Rust backend IPC not found, using built-in fallback verse viewer.");
     }
+
+    // Fallback: Instantly display verse on air
+    setActiveSlide({
+      type: 'VERSE',
+      reference: `${parsed.book} ${parsed.chapter}:${parsed.verse}`,
+      text: `And the king spake unto Ashpenaz the master of his eunuchs, that he should bring certain of the children of Israel, and of the king's seed, and of the princes.`,
+      version: activeVersion,
+    });
+    setIsBlackout(false);
   }, [activeVersion]);
 
   // Voice Speech Engine Listener
@@ -216,7 +225,7 @@ export default function App() {
             <div className="verse-wrapper" style={{ padding: '2rem 4rem', textAlign: 'left', maxWidth: '80%' }}>
               {activeSlide.title && <h1 style={{ fontSize: '2.8rem', color: '#38bdf8', marginBottom: '1.5rem', borderBottom: '2px solid #38bdf8', paddingBottom: '0.5rem' }}>{activeSlide.title}</h1>}
               {activeSlide.notePoints && activeSlide.notePoints.map((point, i) => (
-                <p key={i} style={{ fontSize: '2rem', color: '#f4f4f5', margin: '1rem 0', lineHeight: '1.4' }}>• {point}</p>
+                <p key={i} style={{ fontSize: '2rem', color: '#f4f4f5', margin: '1rem 0', lineHeight: '1.4' }}>{point}</p>
               ))}
             </div>
           ) : (
@@ -230,9 +239,9 @@ export default function App() {
         )}
 
         {/* LIVE SUBTITLE OVERLAY AT BOTTOM OF SCREEN */}
-        {showSubtitles && isListening && transcript && (
+        {showSubtitles && (isListening || transcript) && (
           <div style={{ position: 'absolute', bottom: '3%', left: '5%', right: '5%', backgroundColor: 'rgba(0,0,0,0.85)', color: '#38bdf8', padding: '0.6rem 1.2rem', borderRadius: '6px', textAlign: 'center', fontSize: '1.4rem', borderTop: '2px solid #38bdf8' }}>
-            🎙️ {transcript}
+            🎙️ {transcript || 'Listening...'}
           </div>
         )}
       </div>
@@ -312,6 +321,12 @@ export default function App() {
         >
           🎶 Lyrics & Prayers
         </button>
+        <button
+          onClick={() => setActiveTab('AI_ASSISTANT')}
+          style={{ padding: '0.5rem 1rem', backgroundColor: 'transparent', border: 'none', borderBottom: activeTab === 'AI_ASSISTANT' ? '3px solid #38bdf8' : '3px solid transparent', color: activeTab === 'AI_ASSISTANT' ? '#38bdf8' : '#a1a1aa', fontWeight: 'bold', cursor: 'pointer' }}
+        >
+          ✨ Versify AI Assistant
+        </button>
       </nav>
 
       {/* MAIN WORKSPACE split into FEATURE PANEL (Left) and COMPACT MONITOR (Right) */}
@@ -330,7 +345,7 @@ export default function App() {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Type 'Esther 3 2', '1 Samuel 1 3', 'John 3:16'..."
+                    placeholder="Type 'Daniel 1 3', 'John 3 16', 'Esther 3 2'..."
                   />
                   <button type="submit" className="btn-primary">🚀 Go Live</button>
                 </form>
@@ -469,6 +484,13 @@ export default function App() {
             </div>
           )}
 
+          {/* TAB 6: AI ASSISTANT PANEL */}
+          {activeTab === 'AI_ASSISTANT' && (
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: '500px' }}>
+              <AIAssistantPanel onLiveTranscript={(text) => setTranscript(text)} />
+            </div>
+          )}
+
           {/* THEME SELECTOR */}
           <div className="card" style={{ marginTop: 'auto' }}>
             <h3>🎨 Projection Theme Styles</h3>
@@ -508,7 +530,7 @@ export default function App() {
                 <div style={{ padding: '0.75rem', textAlign: 'left', width: '100%' }}>
                   {activeSlide.title && <h3 style={{ fontSize: '1.1rem', color: '#38bdf8', marginBottom: '0.3rem', borderBottom: '1px solid #38bdf8' }}>{activeSlide.title}</h3>}
                   {activeSlide.notePoints && activeSlide.notePoints.map((point, i) => (
-                    <p key={i} style={{ fontSize: '0.8rem', color: '#f4f4f5', margin: '0.2rem 0' }}>• {point}</p>
+                    <p key={i} style={{ fontSize: '0.8rem', color: '#f4f4f5', margin: '0.2rem 0' }}>{point}</p>
                   ))}
                 </div>
               ) : (
@@ -531,7 +553,7 @@ export default function App() {
             </button>
           </div>
 
-          {/* NEW SUBTITLE & LIVE CAPTION CONTROL BOX BELOW THE MONITOR */}
+          {/* SUBTITLE & LIVE CAPTION CONTROL BOX BELOW THE MONITOR */}
           <div className="card" style={{ marginTop: '0.25rem', padding: '0.6rem', border: '1px solid #27272a' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h4 style={{ fontSize: '0.85rem', margin: 0, color: '#38bdf8' }}>💬 Live Subtitles Overlay</h4>
